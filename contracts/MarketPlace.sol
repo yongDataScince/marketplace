@@ -93,10 +93,10 @@ contract MarketPlace is IMarketPlace {
       return;
     }
 
+    _tokenOwners[_tokenId] = _lastBider[_tokenId];
     _token.transfer(_tokenOwners[_tokenId], _tokensAuctionPrice[_tokenId]);
     _erc721.transferFrom(address(this), _lastBider[_tokenId], _tokenId);
-    _tokenOwners[_tokenId] = _lastBider[_tokenId];
-    _lastBider[_tokenId] = address(0);
+    delete _lastBider[_tokenId];
   }
 
   function cancelAuction(uint _tokenId) override external {
@@ -108,7 +108,7 @@ contract MarketPlace is IMarketPlace {
 
     _token.transfer(_lastBider[_tokenId], _tokensAuctionPrice[_tokenId]);
     _erc721.transferFrom(address(this), _tokenOwners[_tokenId], _tokenId);
-    _lastBider[_tokenId] = address(0);
+    delete _lastBider[_tokenId];
   }
 
   function getPrice(uint _tokenId) external view returns(uint) {
